@@ -198,4 +198,55 @@ public class AInteger{
         return divident.value.compareTo(divisor.value);
     }
 
+    public static AInteger division(AInteger dividend, AInteger divisor) {
+        if (divisor.value.replaceFirst("^0+(?!$)","").equals("0")) throw new ArithmeticException("Division by Zero error");
+        if(dividend.value.replaceFirst("^0+(?!$)","").equals("0")){
+            return new AInteger("0");
+        }
+
+        boolean num1_neg = false;
+        boolean num2_neg = false;
+        if(divisor.value.charAt(0) == '-'){
+            divisor.value = divisor.value.substring(1);
+            if(divisor.value.replaceFirst("^0+(?!$)","").equals("0")) throw new ArithmeticException("Division by zero error");
+            num2_neg = true;
+        }
+        if(dividend.value.charAt(0) == '-'){
+            dividend.value = dividend.value.substring(1);
+            if(dividend.value.replaceFirst("^0+(?!$)","").equals("0")){
+                return new AInteger("0");
+            }
+            num1_neg = true;
+        }
+        
+        if(num1_neg == true && num2_neg == false) return new AInteger("-" + AInteger.division(dividend, divisor).getInt());
+        else if(num1_neg == false && num2_neg == true) return new AInteger("-" + AInteger.division(dividend, divisor).getInt());
+
+        dividend.value = dividend.value.replaceFirst("^0+(?!$)","");
+        divisor.value = divisor.value.replaceFirst("^0+(?!$)","");
+        
+        if (divisor.value.equals("0")) throw new ArithmeticException("Division by Zero error");
+        
+        if (compare(dividend, divisor) < 0) return new AInteger("0");
+    
+        StringBuilder result = new StringBuilder();
+        AInteger temp = new AInteger("0"); 
+    
+        for (int i = 0; i < dividend.value.length(); i++) {
+            temp.value += dividend.value.charAt(i);
+            temp.value = temp.value.replaceFirst("^0+(?!$)", "");  // remove leading zeros
+            int count = 0;
+            while (compare(temp, divisor) >= 0) {
+                temp = subtraction(temp, divisor);
+                count++;
+            }
+            result.append(count);
+        }
+    
+        // Remove leading zeros from the result
+        String finalResult = result.toString().replaceFirst("^0+(?!$)", "");
+        return new AInteger(finalResult);
+    }
+
+
 }
