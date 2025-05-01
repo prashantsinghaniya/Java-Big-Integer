@@ -193,7 +193,57 @@ public class AFloat {
 	}
 
 
+    public static AFloat division(AFloat dividend, AFloat divisor) {
 
+		if( !dividend.value.contains(".") ) dividend.value += ".0";
+		if( !divisor.value.contains(".") ) divisor.value += ".0";
+		String[] dividend_parts = dividend.value.split("\\.");
+		String dividend_int = dividend_parts[0];
+		String dividend_flot = dividend_parts[1];
+		String[] divisor_parts = divisor.value.split("\\.");
+		String divisor_int = divisor_parts[0];
+		String divisor_flot = divisor_parts[1];
+
+		boolean num1_neg = false;
+		boolean num2_neg = false;
+		if (divisor_int.replaceFirst("^0+(?!$)","").equals("0") && divisor_flot.replaceFirst("^0+(?!$)", "").equals("0")) throw new ArithmeticException("Division by zero error");
+		if(divisor.value.charAt(0) == '-') {
+			divisor.value = divisor.value.substring(1);
+			num2_neg = true;
+		}
+		if(dividend.value.charAt(0) == '-') {
+			dividend.value = dividend.value.substring(1);
+			num1_neg = true;
+		}
+		if( (num1_neg == true && num2_neg == false) || (num1_neg == false && num2_neg == true)) return new AFloat( (AFloat.division(dividend, divisor).value.equals("0.0")) ? "0.0" : "-" + AFloat.division(dividend, divisor).value);
+
+
+		int len1 = dividend_flot.length();
+		int len2 = divisor_flot.length();
+		if(len1-len2 > 30) dividend_flot = dividend_flot.substring(0,(30+len2));
+		else {
+			int i_term = 30-(len1-len2);
+			dividend_flot += "0".repeat(i_term);
+		}
+		AInteger full_num1 = AInteger.parse(dividend_int + dividend_flot);
+		AInteger full_num2 = AInteger.parse(divisor_int + divisor_flot);
+
+		AInteger div = AInteger.division(full_num1, full_num2);
+		if ( div.value.length()<31) {
+			String a = "";
+			a += "0".repeat(31-div.value.length());
+			div.value = a + div.value;
+		}
+		div.value = div.value.substring(0, (div.value.length()-30)) + "." + div.value.substring(div.value.length()-30);
+		String div_flot = div.value.substring(div.value.length()-30);
+		div_flot = div_flot.replaceAll("0+$","");
+		if (div_flot.isEmpty()) div_flot = "0";
+
+
+		AFloat quotient = new AFloat(div.value.substring(0, (div.value.length()-30)) + div_flot);
+
+		return quotient;
+	}
 
 
 }
