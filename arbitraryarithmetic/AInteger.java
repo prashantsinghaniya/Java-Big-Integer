@@ -70,4 +70,69 @@ public class AInteger{
         return new AInteger(leading ? "0" : sb.toString());
     }
 
+    public static AInteger subtraction(AInteger num1, AInteger num2){
+        boolean num1_neg = false;
+        boolean num2_neg = false;
+        if(num1.value.charAt(0) == '-'){
+            num1.value = num1.value.substring(1);
+            num1_neg = true;
+        }
+        if(num2.value.charAt(0) == '-'){
+            num2.value = num2.value.substring(1);
+            num2_neg = true;
+        }
+        if(num1_neg == true && num2_neg == false) return new AInteger("-" + AInteger.addition(num1, num2).getInt());
+        else if(num1_neg == false && num2_neg == true) return AInteger.addition(num1, num2);
+        else if(num1_neg == true && num2_neg == true) return AInteger.subtraction(num2,num1);
+        
+        int[] result = new int[Math.max(num1.value.length(), num2.value.length())];
+        int[] n1 = new int[result.length];
+        int[] n2 = new int[result.length];
+        
+        for (int i = result.length - 1, j = num1.value.length() - 1; j >= 0; i--, j--) {
+            n1[i] = num1.value.charAt(j) - '0';
+        }
+
+        // Fill n2 from num2.value
+        for (int i = result.length - 1, j = num2.value.length() - 1; j >= 0; i--, j--) {
+            n2[i] = num2.value.charAt(j) - '0';
+        }
+        
+        boolean result_is_neg = false;
+        for(int i = 0; i<result.length; i++){
+            if(n1[i] < n2[i]){ result_is_neg = true; break;}
+            if(n1[i] > n2[i]) { break; } 
+        }
+        if(result_is_neg){
+            int[]  temp = n1;
+            n1 = n2;
+            n2 = temp;
+        }
+        int carry = 0;
+
+        for (int i = result.length - 1; i >= 0; i--) {
+            n1[i]-=carry;
+            if(n1[i] < n2[i] ){
+                carry = 1;
+                result[i] = 10 + n1[i] - n2[i];
+            } 
+            else{
+                carry = 0;
+                result[i] = n1[i] - n2[i];
+            } 
+        }
+        StringBuilder sb = new StringBuilder();
+        if(result_is_neg){
+            sb.append("-");
+            result_is_neg = false;
+        }
+        boolean leading = true;
+        for(int digit : result){
+            if(digit == 0 && leading == true) continue;
+            leading = false;
+            sb.append(digit);
+        }
+        return new AInteger(leading ? "0" : sb.toString());
+    }
+
 }
