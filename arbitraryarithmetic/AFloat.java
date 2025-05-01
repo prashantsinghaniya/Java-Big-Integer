@@ -45,4 +45,53 @@ public class AFloat {
         return this.value;
     }
 
+    public static AFloat addition(AFloat num1, AFloat num2) {
+
+		boolean num1_neg = false;
+		boolean num2_neg = false;
+		if(num1.value.charAt(0) == '-') {
+			num1.value = num1.value.substring(1);
+			num1_neg = true;
+		}
+		if(num2.value.charAt(0) == '-') {
+			num2.value = num2.value.substring(1);
+			num2_neg = true;
+		}
+		if(num1_neg == true && num2_neg == false) return AFloat.subtraction(num2, num1);
+		else if(num1_neg == false && num2_neg == true) {
+			return AFloat.subtraction(num1, num2);
+		}
+		else if(num1_neg == true && num2_neg == true) return new AFloat( (AFloat.addition(num1,num2).value.equals("0.0")) ? "0.0" : "-" + AFloat.addition(num1,num2).value);
+
+		if( !num1.value.contains(".") ) num1.value += ".0";
+		String[] num1_parts = num1.value.split("\\.");
+		String num1_int = num1_parts[0];
+		String num1_flot = num1_parts[1];
+		if(!num2.value.contains(".")) num2.value += ".0";
+		String[] num2_parts = num2.value.split("\\.");
+		String num2_int = num2_parts[0];
+		String num2_flot = num2_parts[1];
+
+		String[] s = padding(num1_flot, num2_flot);
+
+		AInteger sumFlot = AInteger.addition(AInteger.parse(s[0]), AInteger.parse(s[1]));
+		AInteger sumInt = AInteger.addition(AInteger.parse(num1_int), AInteger.parse(num2_int));
+
+		if(sumFlot.getInt().length() > s[1].length()) {
+			sumInt = AInteger.addition(sumInt, AInteger.parse("1"));
+			sumFlot.value = sumFlot.getInt().substring(1);
+		}
+		else {
+			sumFlot.value = AFloat.f_padding(sumFlot.getInt(), s[1]);
+		}
+		sumFlot.value = sumFlot.value.replaceAll("0+$","");
+		if( sumFlot.value.isEmpty() ) sumFlot.value = "0";
+
+		return new AFloat(sumInt.getInt() + "." + sumFlot.getInt());
+	}
+
+    
+
+
+
 }
