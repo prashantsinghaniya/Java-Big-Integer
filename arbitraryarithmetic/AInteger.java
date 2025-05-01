@@ -192,4 +192,10 @@ public class AInteger{
         return new AInteger(leading ? "0" : sb.toString());
     }
 
+    public static int compare(AInteger divident, AInteger divisor){
+        if(divident.value.length()>divisor.value.length()) return 1;
+        else if (divident.value.length()<divisor.value.length()) return -1;
+        return divident.value.compareTo(divisor.value);
+    }
+
 }
