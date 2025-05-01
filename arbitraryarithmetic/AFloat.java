@@ -88,9 +88,71 @@ public class AFloat {
 		if( sumFlot.value.isEmpty() ) sumFlot.value = "0";
 
 		return new AFloat(sumInt.getInt() + "." + sumFlot.getInt());
+
+    }
+
+    public static AFloat subtraction(AFloat num1, AFloat num2) {
+		boolean num1_neg = false;
+		boolean num2_neg = false;
+		if(num1.value.charAt(0) == '-') {
+			num1.value = num1.value.substring(1);
+			num1_neg = true;
+		}
+		if(num2.value.charAt(0) == '-') {
+			num2.value = num2.value.substring(1);
+			num2_neg = true;
+		}
+		if(num1_neg == true && num2_neg == false) return new AFloat((AFloat.addition(num1, num2).value.equals("0.0"))? "0.0" : "-" + AFloat.addition(num1, num2).value );
+		else if(num1_neg == false && num2_neg == true) return AFloat.addition(num1, num2);
+		else if(num1_neg == true && num2_neg == true) return AFloat.subtraction(num2,num1);
+
+		if( !num1.value.contains(".") ) num1.value += ".0";
+		if( !num2.value.contains(".") ) num2.value += ".0";
+
+		String[] num1_parts = num1.value.split("\\.");
+		String num1_int = num1_parts[0];
+		String num1_flot = num1_parts[1];
+		String[] num2_parts = num2.value.split("\\.");
+		String num2_int = num2_parts[0];
+		String num2_flot = num2_parts[1];
+
+		String[] s = padding(num1_flot, num2_flot);
+
+		AInteger diffFlot = AInteger.subtraction(AInteger.parse(s[0]), AInteger.parse(s[1]));
+		AInteger diffInt = AInteger.subtraction(AInteger.parse(num1_int), AInteger.parse(num2_int));
+
+		if (diffFlot.value.charAt(0) == '-') {
+			if(diffInt.value.charAt(0) != '-' && !diffInt.value.equals("0")) {
+				diffInt = AInteger.subtraction(diffInt, new AInteger("1"));
+				diffFlot = AInteger.subtraction(AInteger.parse("1" + s[0]), AInteger.parse(s[1]));
+			}
+			if(diffInt.value.equals("0")) {
+				diffInt.value = "-" + diffInt.value;
+				diffFlot.value = diffFlot.value.substring(1);
+
+			}
+			if(diffInt.value.charAt(0) == '-' ) {
+				diffInt = AInteger.subtraction(AInteger.parse(num2_int), AInteger.parse(num1_int));
+				diffInt.value = "-" + diffInt.value;
+				diffFlot = AInteger.subtraction(AInteger.parse(s[1]), AInteger.parse(s[0]));
+			}
+
+		} else {
+			if(diffInt.value.charAt(0) == '-' && !diffFlot.value.equals("0")) {
+				diffInt = AInteger.subtraction(AInteger.parse(num2_int), AInteger.parse(num1_int));
+				diffInt = AInteger.subtraction(diffInt, new AInteger("1"));
+				diffInt.value = "-" + diffInt.value;
+				diffFlot = AInteger.subtraction(AInteger.parse("1" + s[1]), AInteger.parse(s[0]));
+			}
+		}
+		diffFlot.value = AFloat.f_padding(diffFlot.value,s[1]);
+		diffFlot.value = diffFlot.value.replaceAll("0+$","");
+		if( diffFlot.value.isEmpty() ) diffFlot.value = "0";
+
+		return new AFloat(diffInt.getInt() + "." + diffFlot.getInt());
 	}
 
-    
+
 
 
 
