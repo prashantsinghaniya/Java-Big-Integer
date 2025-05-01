@@ -70,6 +70,11 @@ public class AInteger{
         return new AInteger(leading ? "0" : sb.toString());
     }
 
+    @Override
+    public String toString() {
+        return this.value;
+    }
+
     public static AInteger subtraction(AInteger num1, AInteger num2){
         boolean num1_neg = false;
         boolean num2_neg = false;
@@ -140,20 +145,20 @@ public class AInteger{
         boolean num2_neg = false;
         if(num1.value.charAt(0) == '-'){
             num1.value = num1.value.substring(1);
-            if(num1.value.replaceFirst("^0+(?!$)","").equals("")){
+            if(num1.value.replaceFirst("^0+(?!$)","").equals("0")){
                 return new AInteger("0");
             }
             num1_neg = true;
         }
         if(num2.value.charAt(0) == '-'){
             num2.value = num2.value.substring(1);
-            if(num2.value.replaceFirst("^0+(?!$)","").equals("")){
+            if(num2.value.replaceFirst("^0+(?!$)","").equals("0")){
                 return new AInteger("0");
             }
             num2_neg = true;
         }
-        if(num1_neg == true && num2_neg == false) return new AInteger("-" + AInteger.multiplication(num1, num2).getInt());
-        else if(num1_neg == false && num2_neg == true) return new AInteger("-" + AInteger.multiplication(num1, num2).getInt());
+        if(num1_neg == true && num2_neg == false) return new AInteger( (AInteger.multiplication(num1, num2).getInt().equals("0")) ? "0" : "-" + AInteger.multiplication(num1, num2).getInt());
+        else if(num1_neg == false && num2_neg == true) return new AInteger( (AInteger.multiplication(num1, num2).getInt()).equals("0") ? "0" : "-" + AInteger.multiplication(num1, num2).getInt());
         int len1 = num1.value.length();
         int len2 = num2.value.length();
         int[] n1 = new int[len1];
@@ -219,8 +224,8 @@ public class AInteger{
             num1_neg = true;
         }
         
-        if(num1_neg == true && num2_neg == false) return new AInteger("-" + AInteger.division(dividend, divisor).getInt());
-        else if(num1_neg == false && num2_neg == true) return new AInteger("-" + AInteger.division(dividend, divisor).getInt());
+        if(num1_neg == true && num2_neg == false) return new AInteger((AInteger.division(dividend, divisor).getInt()).equals("0") ? "0" : "-" + AInteger.division(dividend, divisor).getInt());
+        else if(num1_neg == false && num2_neg == true) return new AInteger((AInteger.division(dividend, divisor).getInt()).equals("0") ? "0" : "-" + AInteger.division(dividend, divisor).getInt());
 
         dividend.value = dividend.value.replaceFirst("^0+(?!$)","");
         divisor.value = divisor.value.replaceFirst("^0+(?!$)","");

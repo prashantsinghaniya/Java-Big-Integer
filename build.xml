@@ -12,7 +12,7 @@
     </target>
 
     <target name="jar" depends="compile">
-        <jar destfile="aarithmetic.jar" basedir="build" includes="arbitraryarithmetic/*.class"/>
+        <jar destfile="arbitraryarithmetic/aarithmetic.jar" basedir="build" includes="arbitraryarithmetic/*.class"/>
     </target>
 
     <target name="run" depends="compile">
