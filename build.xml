@@ -1,0 +1,27 @@
+<project name="MyInfArithProject" default="run" basedir=".">
+    <target name="clean">
+        <delete dir="build"/>
+    </target>
+    <target name="compile" depends="clean">
+        <mkdir dir="build"/>
+        <javac destdir="build">
+            <src path="arbitraryarithmetic"/>
+            <src path="."/>
+            <include name="**/*.java"/>
+        </javac>
+    </target>
+
+    <target name="jar" depends="compile">
+        <jar destfile="aarithmetic.jar" basedir="build" includes="arbitraryarithmetic/*.class"/>
+    </target>
+
+    <target name="run" depends="compile">
+        <java classname="MyInfArith" classpath="build" fork="true">
+            <arg value="${datatype}"/>
+            <arg value="${operation}"/>
+            <arg value="${operand1}"/>
+            <arg value="${operand2}"/>
+        </java>
+    </target>
+
+</project>
