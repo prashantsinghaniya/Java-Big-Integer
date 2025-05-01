@@ -152,6 +152,46 @@ public class AFloat {
 		return new AFloat(diffInt.getInt() + "." + diffFlot.getInt());
 	}
 
+    public static AFloat multiplication(AFloat num1, AFloat num2) {
+		boolean num1_neg = false;
+		boolean num2_neg = false;
+		if(num1.value.charAt(0) == '-') {
+			num1.value = num1.value.substring(1);
+			num1_neg = true;
+		}
+		if(num2.value.charAt(0) == '-') {
+			num2.value = num2.value.substring(1);
+			num2_neg = true;
+		}
+		if( (num1_neg == true && num2_neg == false) || (num1_neg == false && num2_neg == true) ) return new AFloat( (AFloat.multiplication(num1, num2).value.equals("0.0")) ? "0.0" : "-" + AFloat.multiplication(num1, num2).value);
+
+		if( !num1.value.contains(".") ) num1.value += ".0";
+		if( !num2.value.contains(".") ) num2.value += ".0";
+		String[] num1_parts = num1.value.split("\\.");
+		String num1_int = num1_parts[0];
+		String num1_flot = num1_parts[1];
+		String[] num2_parts = num2.value.split("\\.");
+		String num2_int = num2_parts[0];
+		String num2_flot = num2_parts[1];
+
+		AInteger mul = AInteger.multiplication(AInteger.parse(num1_int + num1_flot), AInteger.parse(num2_int + num2_flot));
+		int min_mul_len = num1_flot.length() + num2_flot.length() + 1;
+		if (mul.value.length() < min_mul_len) {
+			String ch = "";
+			ch += "0".repeat(min_mul_len-mul.value.length());
+			mul.value = ch + mul.value;
+		}
+
+		int index = (mul.value.length() - num1_flot.length()-num2_flot.length());
+		mul.value = mul.value.substring(0,index) + "." + mul.value.substring(index);
+
+		String [] mul_parts = mul.value.split("\\.");
+		if (mul_parts[1].length() > 30) mul_parts[1] = mul_parts[1].substring(0,30);
+		mul_parts[1] = mul_parts[1].replaceAll("0+$", "");
+		if(mul_parts[1].isEmpty()) mul_parts[1] = "0";
+		return new AFloat(mul_parts[0] + "." + mul_parts[1]);
+	}
+
 
 
 
