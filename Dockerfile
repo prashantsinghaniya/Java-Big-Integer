@@ -1,7 +1,19 @@
+
 FROM eclipse-temurin
 
-COPY arbitraryarithmetic/aarithmetic.jar app/my.jar
 
-ENTRYPOINT ["java", "-jar", "app/my.jar"]
+RUN apt-get update && apt-get install -y ant
+
+#  Set working directory
+WORKDIR /app
+
+COPY . .
+
+RUN ant jar
+
+# Compile your main class
+RUN javac -cp .:/app/arbitraryarithmetic/aarithmetic.jar MyInfArith.java
+
+ENTRYPOINT ["java", "-cp", ".:/app/arbitraryarithmetic/aarithmetic.jar", "MyInfArith"]
+
 CMD ["int", "add", "1", "1"]
-

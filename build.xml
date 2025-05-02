@@ -1,22 +1,37 @@
-<project name="MyInfArithProject" default="run" basedir=".">
+
+
+<project name="myproject" default="run" basedir="."> 
+
+    <!-- Clean target -->
     <target name="clean">
-        <delete dir="build"/>
+        <delete file="arbitraryarithmetic/aarithmetic.jar"/>
+        <delete>
+            <fileset dir="." includes="**/*.class"/>
+        </delete>
     </target>
+
+    <!-- Compile Java files -->
     <target name="compile" depends="clean">
-        <mkdir dir="build"/>
-        <javac destdir="build">
+        <javac destdir="." includeantruntime="false">
             <src path="arbitraryarithmetic"/>
             <src path="."/>
             <include name="**/*.java"/>
+            
         </javac>
     </target>
 
+    <!-- Create JAR -->
     <target name="jar" depends="compile">
-        <jar destfile="arbitraryarithmetic/aarithmetic.jar" basedir="build" includes="arbitraryarithmetic/*.class"/>
+        <jar destfile="arbitraryarithmetic/aarithmetic.jar" basedir="arbitraryarithmetic">
+            <manifest>
+                <attribute name="Main-Class" value="MyInfArith"/>
+            </manifest>
+        </jar>
     </target>
 
-    <target name="run" depends="compile">
-        <java classname="MyInfArith" classpath="build" fork="true">
+    <!-- Run the program -->
+    <target name="run" depends="jar">
+        <java classname="MyInfArith" classpath="." fork="true">
             <arg value="${datatype}"/>
             <arg value="${operation}"/>
             <arg value="${operand1}"/>

@@ -20,6 +20,7 @@ public class AInteger{
     public AInteger(AInteger other){
         this.value = other.value; 
     }
+
     public static AInteger addition(AInteger num1, AInteger num2) {
         boolean num1_neg = false;
         boolean num2_neg = false;
@@ -35,7 +36,7 @@ public class AInteger{
         else if(num1_neg == false && num2_neg == true){
             return AInteger.subtraction(num1, num2);
         }
-        else if(num1_neg == true && num2_neg == true) return new AInteger("-" + AInteger.addition(num1,num2).getInt());
+        else if(num1_neg == true && num2_neg == true) return new AInteger( (AInteger.addition(num1,num2).getInt().equals("0")) ? "0" : "-" + AInteger.addition(num1,num2).getInt());
         
         int[] result = new int[Math.max(num1.value.length(), num2.value.length()) + 1];
         int[] n1 = new int[result.length];
@@ -86,7 +87,7 @@ public class AInteger{
             num2.value = num2.value.substring(1);
             num2_neg = true;
         }
-        if(num1_neg == true && num2_neg == false) return new AInteger("-" + AInteger.addition(num1, num2).getInt());
+        if(num1_neg == true && num2_neg == false) return new AInteger( (AInteger.addition(num1, num2).getInt().equals("0")) ? "0" : "-" + AInteger.addition(num1, num2).getInt());
         else if(num1_neg == false && num2_neg == true) return AInteger.addition(num1, num2);
         else if(num1_neg == true && num2_neg == true) return AInteger.subtraction(num2,num1);
         
