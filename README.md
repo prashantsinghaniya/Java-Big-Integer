@@ -33,14 +33,25 @@ SDF PROJECT/
 
 ## How to use 
 
--Can be used as a command-line tool or as a library
--docker pull prashantsinghaniya/java-big-integer
--docker run prashantsinghaniya/java-big-integer int add 5 3
-
--As library
--javac -cp aarithmetic.jar MyInfArith.java
--java -cp .:aarithmetic.jar YourMainClass
-
+# Arbitrary Precision Arithmetic Library
+A Java library for arbitrary-precision arithmetic on integers and floating-point numb
+## Compilation
+Run: ‘ant compile‘
+Package: ‘ant jar‘
+## Command-Line Usage
+Execute: ‘java -cp aarithmetic.jar MyInfArith <int/float> <add/sub/mul/div> <op1> <op
+Example: ‘java -cp aarithmetic.jar MyInfArith int add 123 456‘
+Output: ‘579‘
+## Library Usage
+Include ‘aarithmetic.jar‘ in your project to use ‘AInteger‘ and ‘AFloat‘ classes.
+Example:
+- Import ‘arbitraryarithmetic.AInteger‘
+- Create instances: ‘AInteger a = AInteger.parse("123");‘
+- Perform operations: ‘AInteger sum = AInteger.addition(a, AInteger.parse("456"));‘
+- Output: ‘579‘
+## Requirements
+- Java 11 or higher
+- Ant for building
 
 
 ## Project Features
