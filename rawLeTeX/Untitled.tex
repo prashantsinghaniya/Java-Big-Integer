@@ -1,0 +1,194 @@
+\documentclass[12pt]{article}
+\usepackage{geometry}
+\geometry{a4paper,margin=1.in}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+\title{Arbitrary Precision Arithmetic Library \\ Software Development Fundamentals (SDF) Project \\ CS1023}
+\author{Prashant - CS24BTECH11028}
+\date{May 2025}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Introduction}
+This report documents the design, implementation, and evaluation of an arbitrary-precision arithmetic library developed for the Software Development Fundamentals (SDF) course (CS1023, Jan - May 2025). The project implements a Java package, \texttt{arbitraryarithmetic}, containing two classes, \texttt{AInteger} and \texttt{AFloat}, to handle arbitrary-precision arithmetic operations (addition, subtraction, multiplication, and division) for integers and floating-point numbers. The library supports command-line execution via \texttt{MyInfArith.java} and can be packaged as \texttt{aarithmetic.jar} for external use. This report outlines the design decisions, implementation details, usage instructions, limitations, verification approach, and key learnings, as per the project requirements.
+
+\section{Design Decisions}
+The design of the arbitrary-precision arithmetic library prioritizes simplicity, correctness, and adherence to object-oriented programming (OOP) principles. Below are the key design decisions:
+
+\subsection{Class Structure}
+\begin{itemize}
+    \item \textbf{Package}: The library is organized in the \texttt{arbitraryarithmetic} package, containing \texttt{AInteger} and \texttt{AFloat} classes, ensuring modularity and reusability.
+    \item \textbf{AInteger}: Represents arbitrary-precision integers, storing the number as a string to handle large values without relying on external libraries.
+    \item \textbf{AFloat}: Represents arbitrary-precision floating-point numbers, also stored as strings, with operations split into integer and fractional parts.
+    \item \textbf{MyInfArith}: A separate class in the default package for command-line execution, parsing inputs and invoking \texttt{AInteger} or \texttt{AFloat} operations.
+\end{itemize}
+
+\subsection{Operation Implementation}
+\begin{itemize}
+    \item \textbf{Static Methods}: Arithmetic operations (\texttt{addition}, \texttt{subtraction}, \texttt{multiplication}, \texttt{division}) are implemented as static methods in \texttt{AInteger} and \texttt{AFloat}, called via \texttt{MyInfArith}. This deviates from the project requirement for operator overloading but simplifies the initial implementation.
+    \item \textbf{String-Based Arithmetic}: Both classes use string representations and digit-by-digit arithmetic to avoid native type limitations, ensuring no round-off errors for integers and controlled precision (30 decimal digits) for floating-point division.
+    \item \textbf{Negative Numbers}: Handled by checking for a leading minus sign, adjusting operations accordingly (e.g., redirecting to subtraction for mixed signs in addition).
+\end{itemize}
+
+\subsection{Error Handling}
+\begin{itemize}
+    \item \textbf{Input Validation}: \texttt{MyInfArith} validates command-line arguments (type, operation, operands) and catches exceptions for invalid formats or division by zero.
+    \item \textbf{Division by Zero}: Both classes throw an \texttt{ArithmeticException} with the message "Division by zero error," as required by test cases.
+\end{itemize}
+
+\subsection{UML Class Diagram}
+The following UML diagram illustrates the class structure and relationships:
+
+% \begin{plantuml}
+% @startuml
+% package "arbitraryarithmetic" {
+%   class AInteger {
+%     -value: String
+%     +AInteger()
+%     +AInteger(String)
+%     +AInteger(AInteger)
+%     +parse(String): AInteger
+%     +getInt(): String
+%     +toString(): String
+%     +addition(AInteger, AInteger): AInteger
+%     +subtraction(AInteger, AInteger): AInteger
+%     +multiplication(AInteger, AInteger): AInteger
+%     +division(AInteger, AInteger): AInteger
+%     +compare(AInteger, AInteger): int
+%   }
+%   class AFloat {
+%     -value: String
+%     +AFloat()
+%     +AFloat(String)
+%     +AFloat(AFloat)
+%     +parse(String): AFloat
+%     +toString(): String
+%     +addition(AFloat, AFloat): AFloat
+%     +subtraction(AFloat, AFloat): AFloat
+%     +multiplication(AFloat, AFloat): AFloat
+%     +division(AFloat, AFloat): AFloat
+%     +padding(String, String): String[]
+%     +f_padding(String, String): String
+%   }
+% }
+% class MyInfArith {
+%     +main(String[]): void
+% }
+% AInteger ||--o MyInfArith
+% AFloat ||--o MyInfArith
+% @enduml
+% \end{plantuml}
+
+\section{Implementation Details}
+The implementation consists of three main Java files, organized as follows:
+
+\subsection{AInteger.java}
+\begin{itemize}
+    \item \textbf{Constructors}: Default (initializes to "0"), string-based, and copy constructor.
+    \item \textbf{Methods}: \texttt{parse} creates an instance from a string. Arithmetic operations (\texttt{addition}, \texttt{subtraction}, \texttt{multiplication}, \texttt{division}) process digits in arrays, handling carries and negative numbers.
+    \item \textbf{Key Logic}: Uses digit-by-digit arithmetic (e.g., schoolbook addition/subtraction, long multiplication, iterative division) to ensure arbitrary precision.
+\end{itemize}
+
+\subsection{AFloat.java}
+\begin{itemize}
+    \item \textbf{Constructors}: Default (initializes to "0.0"), string-based, and copy constructor.
+    \item \textbf{Methods}: \texttt{parse} creates an instance. Arithmetic operations split numbers into integer and fractional parts, leveraging \texttt{AInteger} for core calculations.
+    \item \textbf{Precision}: Division truncates to 30 decimal digits, with padding to align fractional parts.
+\end{itemize}
+
+\subsection{MyInfArith.java}
+\begin{itemize}
+    \item \textbf{Main Method}: Parses command-line arguments, invokes \texttt{AInteger} or \texttt{AFloat} operations, and handles errors (e.g., invalid type, operation, or division by zero).
+    \item \textbf{Error Handling}: Uses try-catch for \texttt{ArithmeticException} and \texttt{NumberFormatException}.
+\end{itemize}
+
+\subsection{Build System}
+The project uses Ant for building. The \texttt{build.xml} file defines targets for compilation and packaging the library into \texttt{aarithmetic.jar}. Key commands include:
+\begin{itemize}
+    \item Compile: \texttt{ant compile}
+    \item Package: \texttt{ant jar}
+\end{itemize}
+
+\section{Usage Instructions (README)}
+The following is an excerpt from the project's \texttt{README.md}:
+
+\begin{verbatim}
+# Arbitrary Precision Arithmetic Library
+A Java library for arbitrary-precision arithmetic on integers and floating-point numbers.
+
+## Compilation
+Run: `ant compile`
+Package: `ant jar`
+
+## Command-Line Usage
+Execute: `java -cp aarithmetic.jar MyInfArith <int/float> <add/sub/mul/div> <op1> <op2>`
+Example: `java -cp aarithmetic.jar MyInfArith int add 123 456`
+Output: `579`
+
+## Library Usage
+Include `aarithmetic.jar` in your project to use `AInteger` and `AFloat` classes.
+Example:
+- Import `arbitraryarithmetic.AInteger`
+- Create instances: `AInteger a = AInteger.parse("123");`
+- Perform operations: `AInteger sum = AInteger.addition(a, AInteger.parse("456"));`
+- Output: `579`
+
+## Requirements
+- Java 11 or higher
+- Ant for building
+\end{verbatim}
+
+\section{Verification Approach}
+The implementation was tested against the provided test cases to ensure correctness:
+
+\begin{itemize}
+    \item \textbf{Integer Addition}: \texttt{java MyInfArith int add 23650078224912949497310933240250 42939783262467113798386384401498} \\ Output: \texttt{66589861487380063295697317641748}
+    \item \textbf{Integer Subtraction}: \texttt{java MyInfArith int sub 3116511674006599806495512758577 57745242300346381144446453884008} \\ Output: \texttt{-54628730626339781337950941125431}
+    \item \textbf{Integer Multiplication}: \texttt{java MyInfArith int mul 14344163160445929942680697312322 23017167694823904478474013730519} \\ Output: \texttt{330162008905899217578310782382075660760972861550182008086155118}
+    \item \textbf{Integer Division}: \texttt{java MyInfArith int div 8792726365283060579833950521677211 493835253617089647454998358} \\ Output: \texttt{17804979}
+    \item \textbf{Float Division}: \texttt{java MyInfArith float div 8792726365283060579833950521677211.0 493835253617089647454998358} \\ Output: \texttt{17804979.091469989302961159520087878533}
+    \item \textbf{Division by Zero}: \texttt{java MyInfArith int div 20 0} \\ Output: \texttt{Division by zero error}
+\end{itemize}
+
+Testing was automated using a Python script that compiles the project with Ant and runs test cases, ensuring consistent results across all provided inputs.
+
+\section{Limitations}
+\begin{itemize}
+    \item \textbf{Operator Overloading}: The implementation uses static methods (\texttt{addition}, etc.) instead of instance methods (e.g., \texttt{add}), deviating from the project requirement for operator overloading. This simplifies the initial implementation but reduces OOP adherence.
+    \item \textbf{Performance}: Digit-by-digit arithmetic is computationally expensive for very large numbers compared to using optimized libraries.
+    \item \textbf{Input Validation}: Limited validation for malformed inputs (e.g., non-numeric strings or invalid floating-point formats) may cause unexpected behavior.
+    \item \textbf{Floating-Point Precision}: While division truncates to 30 decimal digits, other operations may produce longer fractional parts, which are not consistently truncated.
+\end{itemize}
+
+\section{Git Commit Snapshot}
+The project was version-controlled using Git, with commits for each development stage. Key commits include:
+
+\begin{itemize}
+    \item Initial commit: Project setup and Ant configuration
+    \item Implemented \texttt{AInteger} addition and subtraction (Tag: \texttt{stage1})
+    \item Added \texttt{AInteger} multiplication and division (Tag: \texttt{stage2})
+    \item Implemented \texttt{AFloat} addition and subtraction (Tag: \texttt{stage3})
+    \item Completed \texttt{AFloat} multiplication and division (Tag: \texttt{stage4})
+\end{itemize}
+
+The repository is hosted on GitHub Classroom, with tags for each stage as required.
+
+\section{Key Learnings}
+\begin{itemize}
+    \item \textbf{Arbitrary-Precision Arithmetic}: Gained a deep understanding of digit-by-digit arithmetic algorithms and their implementation challenges.
+    \item \textbf{OOP Principles}: Learned the importance of encapsulation and modularity, though the use of static methods highlighted areas for improvement in operator overloading.
+    \item \textbf{Tool Usage}: Mastered Ant for build automation, Git for version control, and LaTeX for professional documentation.
+    \item \textbf{Testing and Debugging}: Developed skills in writing automated tests and handling edge cases (e.g., negative numbers, division by zero).
+    \item \textbf{Team Collaboration}: Coordinated tasks effectively, using Git for collaborative development and ensuring consistent documentation.
+\end{itemize}
+
+\section{Conclusion}
+The arbitrary-precision arithmetic library successfully implements the required functionality for integer and floating-point operations, meeting most test cases. While the use of static methods deviates from the operator overloading requirement, the implementation ensures correctness and arbitrary precision. Future improvements include adopting instance methods, optimizing performance, and enhancing input validation. The project provided valuable experience in OOP, software engineering tools, and large-scale arithmetic computation.
+
+\end{document}

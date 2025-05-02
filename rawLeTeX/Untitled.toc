@@ -1,0 +1,17 @@
+\contentsline {section}{\numberline {1}Introduction}{2}{}%
+\contentsline {section}{\numberline {2}Design Decisions}{2}{}%
+\contentsline {subsection}{\numberline {2.1}Class Structure}{2}{}%
+\contentsline {subsection}{\numberline {2.2}Operation Implementation}{2}{}%
+\contentsline {subsection}{\numberline {2.3}Error Handling}{3}{}%
+\contentsline {subsection}{\numberline {2.4}UML Class Diagram}{3}{}%
+\contentsline {section}{\numberline {3}Implementation Details}{3}{}%
+\contentsline {subsection}{\numberline {3.1}AInteger.java}{3}{}%
+\contentsline {subsection}{\numberline {3.2}AFloat.java}{3}{}%
+\contentsline {subsection}{\numberline {3.3}MyInfArith.java}{3}{}%
+\contentsline {subsection}{\numberline {3.4}Build System}{3}{}%
+\contentsline {section}{\numberline {4}Usage Instructions (README)}{4}{}%
+\contentsline {section}{\numberline {5}Verification Approach}{4}{}%
+\contentsline {section}{\numberline {6}Limitations}{5}{}%
+\contentsline {section}{\numberline {7}Git Commit Snapshot}{5}{}%
+\contentsline {section}{\numberline {8}Key Learnings}{6}{}%
+\contentsline {section}{\numberline {9}Conclusion}{6}{}%
